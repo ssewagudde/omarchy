@@ -1,76 +1,38 @@
-[colors.primary]
-background = "#24273a"
-foreground = "#cad3f5"
-dim_foreground = "#8087a2"
-bright_foreground = "#cad3f5"
+# Catppuccin Mocha theme for Ghostty
+background = 1e1e2e
+foreground = cdd6f4
 
-[colors.cursor]
-text = "#24273a"
-cursor = "#f4dbd6"
+cursor-color = f5e0dc
+cursor-text = 1e1e2e
 
-[colors.vi_mode_cursor]
-text = "#24273a"
-cursor = "#b7bdf8"
+selection-background = f5e0dc
+selection-foreground = 1e1e2e
 
-[colors.search.matches]
-foreground = "#24273a"
-background = "#a5adcb"
+# Normal colors
+palette = 0=#45475a
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#f5c2e7
+palette = 6=#94e2d5
+palette = 7=#bac2de
 
-[colors.search.focused_match]
-foreground = "#24273a"
-background = "#a6da95"
+# Bright colors
+palette = 8=#585b70
+palette = 9=#f38ba8
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#89b4fa
+palette = 13=#f5c2e7
+palette = 14=#94e2d5
+palette = 15=#a6adc8
 
-[colors.footer_bar]
-foreground = "#24273a"
-background = "#a5adcb"
+# Extended colors
+palette = 16=#fab387
+palette = 17=#f5e0dc
 
-[colors.hints.start]
-foreground = "#24273a"
-background = "#eed49f"
+font-family = JetBrainsMono Nerd Font
+font-size = 11
 
-[colors.hints.end]
-foreground = "#24273a"
-background = "#a5adcb"
-
-[colors.selection]
-text = "#24273a"
-background = "#f4dbd6"
-
-[colors.normal]
-black = "#494d64"
-red = "#ed8796"
-green = "#a6da95"
-yellow = "#eed49f"
-blue = "#8aadf4"
-magenta = "#f5bde6"
-cyan = "#8bd5ca"
-white = "#b8c0e0"
-
-[colors.bright]
-black = "#5b6078"
-red = "#ed8796"
-green = "#a6da95"
-yellow = "#eed49f"
-blue = "#8aadf4"
-magenta = "#f5bde6"
-cyan = "#8bd5ca"
-white = "#a5adcb"
-
-[colors.dim]
-black = "#494d64"
-red = "#ed8796"
-green = "#a6da95"
-yellow = "#eed49f"
-blue = "#8aadf4"
-magenta = "#f5bde6"
-cyan = "#8bd5ca"
-white = "#b8c0e0"
-
-[[colors.indexed_colors]]
-index = 16
-color = "#f5a97f"
-
-[[colors.indexed_colors]]
-index = 17
-color = "#f4dbd6"
-
+window-opacity = 0.95

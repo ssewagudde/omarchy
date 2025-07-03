@@ -1,0 +1,22 @@
+# Ghostty Configuration
+# Font settings
+font-family = JetBrainsMono Nerd Font
+font-size = 11
+
+# Window settings
+window-opacity = 0.95
+window-padding-x = 8
+window-padding-y = 8
+
+# Theme will be set by Omarchy theme system
+# Colors are loaded from ~/.local/share/omarchy/themes/*/ghostty
+
+# Cursor settings
+cursor-style = block
+cursor-style-blink = false
+
+# Shell integration
+shell-integration = zsh
+
+# Performance
+macos-non-native-fullscreen = true
