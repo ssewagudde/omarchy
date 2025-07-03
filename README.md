@@ -56,6 +56,11 @@ Omarchy is specially optimized for MacBook users:
 - **mako** notification daemon
 - **Multiple theme support** with easy switching
 
+### Remote Access
+- **RustDesk** for seamless remote desktop from Mac/Windows/Linux
+- **Wayland-compatible** remote access solution
+- **Easy setup** with connection ID and password
+
 ## 📖 Usage
 
 After installation:
@@ -64,6 +69,17 @@ After installation:
 - **Super + Q**: Quit application (Mac-style)
 - **3-finger swipe**: Switch workspaces
 - **Cmd+C/V**: Copy/paste (Mac-style)
+
+## 🌐 Remote Access
+
+Access your Omarchy machine from anywhere:
+
+```bash
+# Install remote access (optional)
+source ~/.local/share/omarchy/install/remote-access.sh
+```
+
+Then download RustDesk on your Mac/Windows/phone and connect using the displayed ID!
 
 ## 🎨 Themes
 
