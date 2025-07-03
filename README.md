@@ -14,9 +14,19 @@ Turn a fresh Arch installation into a fully-configured, beautiful, and modern de
 
 ## 🚀 Installation
 
+### Quick Install (Recommended)
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ssewagudde/omarchy/master/boot.sh | bash
 ```
+
+### Fast Core Install (5-10 minutes)
+```bash
+# Clone and run fast installation
+git clone https://github.com/ssewagudde/omarchy.git ~/.local/share/omarchy
+source ~/.local/share/omarchy/install-fast.sh
+```
+
+The fast install includes only essentials. Add optional components later as needed.
 
 ## 🍎 MacBook Features
 
