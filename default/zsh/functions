@@ -72,5 +72,15 @@ refresh-xcompose() {
   setsid fcitx5 &>/dev/null &
 }
 
+# Yazi function for file navigation
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
+
 # Ensure that external keyboards that use an fn key has the F keys as the default
 alias fix_fkeys='echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode'

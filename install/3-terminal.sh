@@ -3,4 +3,4 @@ yay -S --noconfirm --needed \
   fd eza fzf ripgrep zoxide bat \
   wl-clipboard fastfetch btop \
   man tldr less whois plocate \
-  ghostty zsh
+  ghostty zsh atuin yazi lsd

@@ -1,12 +1,37 @@
-# History control
-shopt -s histappend
-HISTCONTROL=ignoreboth
-HISTSIZE=32768
-HISTFILESIZE="${HISTSIZE}"
+# History control (zsh version)
+HISTSIZE=4000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+setopt appendhistory sharehistory hist_ignore_space hist_ignore_all_dups hist_save_no_dups
 
-# Autocompletion
-# source /usr/share/bash-completion/bash_completion
+# Completion setup
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# Keybindings
+bindkey -e
+autoload -U history-search-backward history-search-forward
+zle -N history-search-backward
+zle -N history-search-forward
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
 
 # Set complete path
 export PATH="./bin:$HOME/.local/bin:$HOME/.local/share/omarchy/bin:$PATH"
-set +h
+fpath=("${HOME}/.zfunc" $fpath)
+
+# Load environment secrets if available
+if [[ -f "${HOME}/secrets/.env" ]]; then
+  set -a
+  source "${HOME}/secrets/.env"
+  set +a
+fi
+
+# Load additional tools
+[[ -f "$HOME/.atuin/bin/env" ]] && source "$HOME/.atuin/bin/env"
+[[ -f "$HOME/.config/envman/load.sh" ]] && source "$HOME/.config/envman/load.sh"
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

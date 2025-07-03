@@ -29,7 +29,33 @@ alias g='git'
 alias d='docker'
 alias r='rails'
 
-# Git
+# Custom aliases from user config
+alias man='nvim -c Man'
+alias zshconfig="nv ~/.zshrc"
+alias szz="source ~/.zshrc"
+alias nvconfig="nv ~/.config/nvim"
+alias py="python3"
+alias c="clear"
+alias tree="lsd --tree"
+alias cam="curl wttr.in/Cambridge"
+
+# Git aliases (enhanced)
+alias gs="git status --short"
+alias gd="git diff --output-indicator-new=' ' --output-indicator-old=' '"
+alias ga="git add"
+alias gr="git rm"
+alias gap="git add --patch"
+alias gc="git commit"
 alias gcm='git commit -m'
 alias gcam='git commit -a -m'
 alias gcad='git commit -a --amend'
+alias gl="git pull"
+alias gp="git push"
+alias gll="git log --all --graph --pretty=format:'%C(magenta)%h %C(white) %an %ar%C(auto) %D%n%s%n'"
+alias gu="git branch"
+alias gi="git init"
+alias gcl="git clone"
+
+# Development aliases
+alias jj="c; uv run main.py"
+alias tt="uv run test.py"

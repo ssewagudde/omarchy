@@ -1,9 +1,45 @@
+# === Zinit Setup ===
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Download Zinit if not installed
+if [ ! -d "$ZINIT_HOME" ]; then
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+# Source Zinit
+if [[ -f "${ZINIT_HOME}/zinit.zsh" ]]; then
+  source "${ZINIT_HOME}/zinit.zsh"
+  
+  # Load plugins with turbo mode
+  zinit wait lucid for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust \
+    atload"_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions \
+    atinit"zicompinit; zicdreplay" \
+    zdharma-continuum/fast-syntax-highlighting \
+    blockf atpull'zinit creinstall -q .' \
+    zsh-users/zsh-completions \
+    Aloxaf/fzf-tab
+
+  zinit ice depth=1
+  zinit light romkatv/powerlevel10k
+fi
+
+# Tool initialization
 if command -v mise &> /dev/null; then
   eval "$(mise activate zsh)"
 fi
 
 if command -v zoxide &> /dev/null; then
   eval "$(zoxide init zsh)"
+fi
+
+if command -v atuin &> /dev/null; then
+  eval "$(atuin init zsh)"
 fi
 
 if command -v fzf &> /dev/null; then
@@ -14,3 +50,26 @@ if command -v fzf &> /dev/null; then
     source /usr/share/fzf/key-bindings.zsh
   fi
 fi
+
+# Platform-specific settings
+case "$(uname)" in
+  Darwin)
+    # macOS-specific paths and aliases
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+    export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
+    alias nv="/opt/homebrew/bin/nvim"
+    if command -v keychain &> /dev/null && [[ -f ~/.ssh/Coding.pem ]]; then
+      eval "$(keychain --eval --agents ssh ~/.ssh/Coding.pem)"
+    fi
+    ;;
+  Linux)
+    # Linux-specific paths and aliases
+    export PATH="$PATH:/opt/nvim-linux64/bin"
+    if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+    alias nv="nvim"
+    ;;
+esac
