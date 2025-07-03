@@ -1,10 +1,91 @@
 # Omarchy
 
-Turn a fresh Arch installation into a fully-configured, beautiful, and modern web development system based on Hyprland by running a single command. That's the one-line pitch for Omarchy (like it was for Omakub). No need to write bespoke configs for every essential tool just to get started or to be up on all the latest command-line tools. Omarchy is an opinionated take on what Linux can be at its best.
+Turn a fresh Arch installation into a fully-configured, beautiful, and modern development system based on Hyprland by running a single command. Omarchy provides an opinionated take on what Linux can be at its best - optimized for developers and MacBook users transitioning to Linux.
+
+## ✨ What You Get
+
+- **🐚 zsh** as default shell with Zinit plugin manager and Powerlevel10k theme
+- **💻 ghostty** terminal emulator for blazing-fast performance
+- **🪟 Hyprland** Wayland compositor with beautiful animations
+- **🎨 Multiple themes**: Catppuccin, Gruvbox, Nord, Tokyo Night, Kanagawa, Everforest
+- **🔧 Modern CLI tools**: atuin, yazi, eza, fzf, ripgrep, zoxide, bat, and more
+- **🍎 MacBook optimized**: Natural scrolling, 3-finger gestures, Mac-style shortcuts
+- **⚡ Development ready**: Go, Rust, Python (uv), Docker, Git, GitHub CLI
+
+## 🚀 Installation
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/basecamp/omarchy/master/boot.sh | bash
+```
+
+## 🍎 MacBook Features
+
+Omarchy is specially optimized for MacBook users:
+
+- **Natural trackpad scrolling** and 3-finger workspace gestures
+- **Mac-style shortcuts**: Cmd+C/V/X/A/Z/Q/W/N/R work as expected
+- **Caps Lock → Control** mapping for familiar keyboard behavior
+- **Optimal 1.66x scaling** for crisp text on high-DPI displays
+- **Platform detection** for seamless macOS/Linux compatibility
+
+## 🛠️ What's Included
+
+### Shell & Terminal
+- **zsh** with Zinit plugin manager
+- **ghostty** terminal emulator
+- **Powerlevel10k** theme with auto-configuration
+- Enhanced completions, syntax highlighting, and autosuggestions
+
+### Development Tools
+- **Languages**: Go, Rust, Python (with uv), Node.js (via mise)
+- **Version management**: mise for runtime versions
+- **Containers**: Docker with lazydocker TUI
+- **Git**: Enhanced with lazygit TUI and comprehensive aliases
+
+### System Tools
+- **File management**: yazi TUI file manager, eza/lsd for listings
+- **Search**: fzf fuzzy finder, ripgrep for fast text search
+- **Navigation**: zoxide for smart directory jumping
+- **History**: atuin for enhanced shell history sync
+- **Monitoring**: btop for system monitoring
+
+### Desktop Environment
+- **Hyprland** Wayland compositor
+- **waybar** status bar with system information
+- **wofi** application launcher
+- **mako** notification daemon
+- **Multiple theme support** with easy switching
+
+## 📖 Usage
+
+After installation:
+- **Super + Enter**: Open terminal
+- **Super + Space**: Application launcher
+- **Super + Q**: Quit application (Mac-style)
+- **3-finger swipe**: Switch workspaces
+- **Cmd+C/V**: Copy/paste (Mac-style)
+
+## 🎨 Themes
+
+Switch between beautiful themes:
+- Catppuccin (default)
+- Gruvbox
+- Nord
+- Tokyo Night
+- Kanagawa
+- Everforest
+
+## 📚 Documentation
+
+For detailed configuration and customization, see the [AGENTS.md](AGENTS.md) file.
 
 Read more at [omarchy.org](https://omarchy.org).
 
-## License
+## 🤝 Contributing
+
+Omarchy is designed to be a solid foundation that works out of the box. Contributions that enhance the core experience while maintaining simplicity are welcome.
+
+## 📄 License
 
 Omarchy is released under the [MIT License](https://opensource.org/licenses/MIT).
 
