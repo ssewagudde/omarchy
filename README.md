@@ -15,7 +15,7 @@ Turn a fresh Arch installation into a fully-configured, beautiful, and modern de
 ## 🚀 Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/basecamp/omarchy/master/boot.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ssewagudde/omarchy/master/boot.sh | bash
 ```
 
 ## 🍎 MacBook Features
