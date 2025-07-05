@@ -13,36 +13,18 @@ log_info "Installing Hyprland and related packages"
 install_packages \
   hyprland hyprshot hyprpicker hyprlock hypridle hyprpolkitagent hyprland-qtutils \
   wofi waybar mako swaybg \
-  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk \
-  sddm
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
 
-# Configure SDDM display manager
-log_info "Configuring SDDM display manager for automatic login"
-sudo systemctl enable sddm
+# Backup existing zprofile
+backup_file ~/.zprofile
 
-# Create Hyprland desktop entry for SDDM
-sudo mkdir -p /usr/share/wayland-sessions
-sudo tee /usr/share/wayland-sessions/hyprland.desktop >/dev/null <<'EOF'
-[Desktop Entry]
-Name=Hyprland
-Comment=An intelligent dynamic tiling Wayland compositor
-Exec=Hyprland
-Type=Application
-EOF
-
-# Remove old auto-start method
-if [[ -f ~/.zprofile ]]; then
-    backup_file ~/.zprofile
-    sed -i '/Hyprland/d' ~/.zprofile 2>/dev/null || true
-fi
+# Start Hyprland automatically on tty1
+log_info "Configuring Hyprland to start automatically on login"
+echo "[[ -z \$DISPLAY && \$(tty) == /dev/tty1 ]] && exec Hyprland" >~/.zprofile
 
 log_success "Hyprland installation completed"
 log_info ""
-log_info "🖥️  Display Manager Setup:"
-log_info "  • SDDM is now enabled and will show a login screen on boot"
-log_info "  • Select 'Hyprland' from the session menu when logging in"
-log_info ""
-log_info "🔐 Optional Auto-login:"
-log_info "  • Enable: omarchy-autologin enable"
-log_info "  • Disable: omarchy-autologin disable"
-log_info "  • Status: omarchy-autologin status"
+log_info "🖥️  Auto-start Setup:"
+log_info "  • Hyprland will start automatically when you log in to tty1"
+log_info "  • After reboot, just enter your username and password"
+log_info "  • Hyprland will launch immediately after login"

@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Omarchy Auto-start Configuration
+set -euo pipefail
+
+# Source common functions if available
+if [[ -f ~/.local/share/omarchy/install/common.sh ]]; then
+    source ~/.local/share/omarchy/install/common.sh
+else
+    log_info() { echo "[INFO] $*" >&2; }
+    log_success() { echo "[SUCCESS] $*" >&2; }
+    log_warning() { echo "[WARNING] $*" >&2; }
+    log_error() { echo "[ERROR] $*" >&2; }
+fi
+
+show_usage() {
+    cat << EOF
+Usage: $(basename "$0") [COMMAND]
+
+Configure Hyprland auto-start behavior
+
+COMMANDS:
+    enable      Enable Hyprland auto-start on tty1
+    disable     Disable Hyprland auto-start
+    status      Show current auto-start status
+    help        Show this help message
+
+EXAMPLES:
+    $(basename "$0") enable
+    $(basename "$0") disable
+    $(basename "$0") status
+
+EOF
+}
+
+enable_autostart() {
+    log_info "Enabling Hyprland auto-start on tty1"
+    
+    # Backup existing zprofile
+    if [[ -f ~/.zprofile ]]; then
+        cp ~/.zprofile ~/.zprofile.backup.$(date +%s)
+    fi
+    
+    # Remove any existing Hyprland entries
+    if [[ -f ~/.zprofile ]]; then
+        sed -i '/Hyprland/d' ~/.zprofile
+    fi
+    
+    # Add auto-start line
+    echo "[[ -z \$DISPLAY && \$(tty) == /dev/tty1 ]] && exec Hyprland" >> ~/.zprofile
+    
+    log_success "Hyprland auto-start enabled"
+    log_info "Hyprland will start automatically when you log in to tty1"
+}
+
+disable_autostart() {
+    log_info "Disabling Hyprland auto-start"
+    
+    if [[ -f ~/.zprofile ]]; then
+        # Backup current file
+        cp ~/.zprofile ~/.zprofile.backup.$(date +%s)
+        
+        # Remove Hyprland auto-start lines
+        sed -i '/Hyprland/d' ~/.zprofile
+        
+        log_success "Hyprland auto-start disabled"
+        log_info "You can now start Hyprland manually with: Hyprland"
+    else
+        log_info "No .zprofile found - auto-start was not enabled"
+    fi
+}
+
+show_status() {
+    log_info "Hyprland auto-start status:"
+    echo
+    
+    if [[ -f ~/.zprofile ]] && grep -q "Hyprland" ~/.zprofile; then
+        echo "Status: ENABLED"
+        echo "Configuration:"
+        grep "Hyprland" ~/.zprofile
+        echo
+        echo "Hyprland will start automatically when you log in to tty1"
+    else
+        echo "Status: DISABLED"
+        echo "Hyprland will not start automatically"
+        echo "Start manually with: Hyprland"
+    fi
+}
+
+main() {
+    case "${1:-help}" in
+        enable)
+            enable_autostart
+            ;;
+        disable)
+            disable_autostart
+            ;;
+        status)
+            show_status
+            ;;
+        help|--help|-h)
+            show_usage
+            ;;
+        *)
+            log_error "Unknown command: $1"
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
