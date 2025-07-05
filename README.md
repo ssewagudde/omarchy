@@ -28,14 +28,24 @@ source ~/.local/share/omarchy/install-fast.sh
 
 The fast install includes only essentials. Add optional components later as needed.
 
+### Manual Component Installation
+```bash
+# Install specific components after core installation
+source ~/.local/share/omarchy/install/development.sh  # Development tools
+source ~/.local/share/omarchy/install/docker.sh       # Docker support
+source ~/.local/share/omarchy/install/nvidia.sh       # NVIDIA drivers
+source ~/.local/share/omarchy/install/keyd.sh         # Key remapping (Meta/Caps→Ctrl)
+source ~/.local/share/omarchy/install/xtras.sh        # Extra applications
+```
+
 ## 🍎 MacBook Features
 
 Omarchy is specially optimized for MacBook users:
 
 - **Natural trackpad scrolling** and 3-finger workspace gestures
 - **Mac-style shortcuts**: Cmd+C/V/X/A/Z/Q/W/N/R work as expected
-- **Caps Lock → Control** mapping for familiar keyboard behavior
-- **Optimal 1.66x scaling** for crisp text on high-DPI displays
+- **Caps Lock → Control** and **Meta/Cmd → Control** mapping for familiar keyboard behavior
+- **Optimal 1.33x scaling** for crisp text on high-DPI displays
 - **Platform detection** for seamless macOS/Linux compatibility
 
 ## 🛠️ What's Included
@@ -91,13 +101,51 @@ source ~/.local/share/omarchy/install/remote-access.sh
 
 Then download RustDesk on your Mac/Windows/phone and connect using the displayed ID!
 
+## ⌨️ Key Remapping
+
+Omarchy includes keyd configuration for Mac-like key behavior:
+
+```bash
+# Install and configure key remapping
+source ~/.local/share/omarchy/install/keyd.sh
+
+# Manage keyd configuration
+omarchy-keyd status    # Show current status
+omarchy-keyd reload    # Reload configuration
+omarchy-keyd edit      # Edit configuration
+omarchy-keyd test      # Test key mappings
+```
+
+**Default mappings:**
+- **Caps Lock → Control**
+- **Meta/Super/Cmd → Control**
+- This makes Cmd+C, Cmd+V, etc. work like on Mac
+
+## 🔄 Backup & Rollback
+
+Omarchy automatically backs up your existing configurations before making changes:
+
+```bash
+# List available backups
+~/.local/share/omarchy/bin/omarchy-rollback --list
+
+# Restore a specific file
+~/.local/share/omarchy/bin/omarchy-rollback --restore ~/.zshrc
+
+# Restore all backed up files
+~/.local/share/omarchy/bin/omarchy-rollback --restore-all
+
+# Clean up all backups
+~/.local/share/omarchy/bin/omarchy-rollback --clean
+```
+
 ## 🎨 Themes
 
 Switch between beautiful themes:
-- Catppuccin (default)
+- Tokyo Night (default)
+- Catppuccin
 - Gruvbox
 - Nord
-- Tokyo Night
 - Kanagawa
 - Everforest
 

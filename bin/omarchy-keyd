@@ -1,0 +1,250 @@
+#!/bin/bash
+
+# Omarchy keyd management utility
+set -euo pipefail
+
+# Colors for output
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $*" >&2
+}
+
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $*" >&2
+}
+
+log_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $*" >&2
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $*" >&2
+}
+
+show_usage() {
+    cat << EOF
+Usage: $(basename "$0") [COMMAND]
+
+Omarchy keyd management utility
+
+COMMANDS:
+    status      Show keyd service status and current configuration
+    reload      Reload keyd configuration
+    edit        Edit keyd configuration
+    reset       Reset to default Omarchy keyd configuration
+    test        Test key mappings
+    install     Install and configure keyd
+    uninstall   Remove keyd configuration
+    help        Show this help message
+
+EXAMPLES:
+    $(basename "$0") status
+    $(basename "$0") reload
+    $(basename "$0") edit
+    $(basename "$0") reset
+
+EOF
+}
+
+check_keyd_installed() {
+    if ! command -v keyd &>/dev/null; then
+        log_error "keyd is not installed. Run: $(basename "$0") install"
+        exit 1
+    fi
+}
+
+check_root_for_config() {
+    if [[ $EUID -ne 0 ]] && [[ "$1" == "config" ]]; then
+        log_error "Configuration changes require root privileges"
+        log_info "Try: sudo $(basename "$0") $*"
+        exit 1
+    fi
+}
+
+show_status() {
+    check_keyd_installed
+    
+    log_info "keyd service status:"
+    systemctl status keyd --no-pager || true
+    
+    echo
+    log_info "Current keyd configuration:"
+    if [[ -f /etc/keyd/default.conf ]]; then
+        echo "Configuration file: /etc/keyd/default.conf"
+        echo "Last modified: $(stat -c %y /etc/keyd/default.conf)"
+        echo
+        echo "Active mappings:"
+        grep -E "^[a-z].*=" /etc/keyd/default.conf | head -10 || echo "No mappings found"
+    else
+        log_warning "No keyd configuration found at /etc/keyd/default.conf"
+    fi
+}
+
+reload_config() {
+    check_keyd_installed
+    check_root_for_config config
+    
+    log_info "Reloading keyd configuration"
+    keyd reload
+    log_success "keyd configuration reloaded"
+}
+
+edit_config() {
+    check_keyd_installed
+    
+    local editor="${EDITOR:-nano}"
+    
+    if [[ $EUID -eq 0 ]]; then
+        $editor /etc/keyd/default.conf
+    else
+        sudo $editor /etc/keyd/default.conf
+    fi
+    
+    log_info "Configuration edited. Reload with: $(basename "$0") reload"
+}
+
+reset_config() {
+    check_keyd_installed
+    check_root_for_config config
+    
+    log_info "Resetting to default Omarchy keyd configuration"
+    
+    if [[ -f ~/.local/share/omarchy/config/keyd/default.conf ]]; then
+        cp ~/.local/share/omarchy/config/keyd/default.conf /etc/keyd/default.conf
+        log_success "Reset to Omarchy default configuration"
+    else
+        # Fallback configuration
+        tee /etc/keyd/default.conf >/dev/null <<'EOF'
+[ids]
+*
+
+[main]
+capslock = control
+meta = control
+leftmeta = control
+rightmeta = control
+EOF
+        log_success "Reset to fallback configuration"
+    fi
+    
+    keyd reload
+    log_success "Configuration reloaded"
+}
+
+test_mappings() {
+    check_keyd_installed
+    
+    log_info "Testing key mappings..."
+    echo
+    echo "Test the following key combinations:"
+    echo "  1. Press Caps Lock + C (should copy)"
+    echo "  2. Press Meta/Cmd + C (should copy)"
+    echo "  3. Press Caps Lock + V (should paste)"
+    echo "  4. Press Meta/Cmd + V (should paste)"
+    echo
+    echo "If these work as Control combinations, the mapping is successful!"
+    echo
+    log_info "You can also check with: keyd monitor"
+}
+
+install_keyd() {
+    log_info "Installing keyd"
+    
+    if command -v yay &>/dev/null; then
+        yay -S --noconfirm --needed keyd
+    elif command -v pacman &>/dev/null; then
+        sudo pacman -S --noconfirm --needed keyd
+    else
+        log_error "Package manager not found. Please install keyd manually."
+        exit 1
+    fi
+    
+    # Run the full installation script
+    if [[ -f ~/.local/share/omarchy/install/keyd.sh ]]; then
+        source ~/.local/share/omarchy/install/keyd.sh
+    else
+        log_warning "Omarchy keyd installation script not found"
+        log_info "Configuring keyd manually..."
+        
+        sudo mkdir -p /etc/keyd
+        reset_config
+        sudo systemctl enable keyd
+        sudo systemctl start keyd
+    fi
+}
+
+uninstall_keyd() {
+    log_warning "This will remove keyd configuration and disable the service"
+    
+    if command -v gum &>/dev/null; then
+        if ! gum confirm "Are you sure you want to uninstall keyd configuration?"; then
+            log_info "Uninstall cancelled"
+            return 0
+        fi
+    else
+        read -p "Are you sure you want to uninstall keyd configuration? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Uninstall cancelled"
+            return 0
+        fi
+    fi
+    
+    if systemctl is-active --quiet keyd; then
+        sudo systemctl stop keyd
+        log_info "Stopped keyd service"
+    fi
+    
+    if systemctl is-enabled --quiet keyd; then
+        sudo systemctl disable keyd
+        log_info "Disabled keyd service"
+    fi
+    
+    if [[ -f /etc/keyd/default.conf ]]; then
+        sudo mv /etc/keyd/default.conf /etc/keyd/default.conf.disabled
+        log_info "Disabled keyd configuration"
+    fi
+    
+    log_success "keyd configuration removed"
+}
+
+main() {
+    case "${1:-help}" in
+        status)
+            show_status
+            ;;
+        reload)
+            reload_config
+            ;;
+        edit)
+            edit_config
+            ;;
+        reset)
+            reset_config
+            ;;
+        test)
+            test_mappings
+            ;;
+        install)
+            install_keyd
+            ;;
+        uninstall)
+            uninstall_keyd
+            ;;
+        help|--help|-h)
+            show_usage
+            ;;
+        *)
+            log_error "Unknown command: $1"
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
