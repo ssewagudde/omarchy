@@ -68,6 +68,15 @@ verify_file() {
     fi
 }
 
+verify_directory() {
+    local dir="$1"
+    
+    if [[ ! -d "$dir" ]]; then
+        log_error "Required directory '$dir' not found."
+        return 1
+    fi
+}
+
 # Safe package installation with retry
 install_packages() {
     local packages=("$@")

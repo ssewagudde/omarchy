@@ -4,8 +4,8 @@
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 init_omarchy_script
 
-# Verify required directories exist
-verify_file ~/.local/share/omarchy/config
+# Verify required directories and files exist
+verify_directory ~/.local/share/omarchy/config
 verify_file ~/.local/share/omarchy/default/zsh/rc
 
 log_info "Copying Omarchy configurations"
