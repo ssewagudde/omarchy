@@ -24,7 +24,7 @@ echo "  Docker: source ~/.local/share/omarchy/install/docker.sh"
 echo "  Ruby: source ~/.local/share/omarchy/install/ruby.sh"
 echo "  NVIDIA: source ~/.local/share/omarchy/install/nvidia.sh"
 echo "  Printer: source ~/.local/share/omarchy/install/printer.sh"
-echo "  Extra Apps: source ~/.local/share/omarchy/install/xtras.sh"
+echo "  Extra Apps: included in development.sh"
 echo "  Remote Access: source ~/.local/share/omarchy/install/remote-access.sh"
 echo ""
 

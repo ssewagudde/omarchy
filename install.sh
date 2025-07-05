@@ -23,7 +23,7 @@ source ~/.local/share/omarchy/install/nvim.sh
 # source ~/.local/share/omarchy/install/docker.sh      # Uncomment if needed
 # source ~/.local/share/omarchy/install/ruby.sh        # Uncomment if needed  
 # source ~/.local/share/omarchy/install/printer.sh     # Uncomment if needed
-# source ~/.local/share/omarchy/install/xtras.sh       # Uncomment if needed
+# Extra apps are now included in development.sh
 # source ~/.local/share/omarchy/install/nvidia.sh      # Auto-detects, uncomment if issues
 
 # Ensure locate is up to date now that everything has been installed
