@@ -74,11 +74,16 @@ if [[ -f ~/.config/omarchy/current/theme/wofi.css ]]; then
     log_info "Linked wofi theme"
 fi
 
-# Neovim configuration
+# Neovim configuration (only if nvim config directory exists or will be created)
 if [[ -f ~/.config/omarchy/current/theme/neovim.lua ]]; then
-    mkdir -p ~/.config/nvim/lua/plugins
-    ln -snf ~/.config/omarchy/current/theme/neovim.lua ~/.config/nvim/lua/plugins/theme.lua
-    log_info "Linked neovim theme"
+    # Only create nvim directories if nvim is installed or config exists
+    if command -v nvim &>/dev/null || [[ -d ~/.config/nvim ]]; then
+        mkdir -p ~/.config/nvim/lua/plugins
+        ln -snf ~/.config/omarchy/current/theme/neovim.lua ~/.config/nvim/lua/plugins/theme.lua
+        log_info "Linked neovim theme"
+    else
+        log_info "Skipping neovim theme (nvim not installed yet)"
+    fi
 fi
 
 # Btop configuration
