@@ -112,10 +112,10 @@ reset_config() {
 *
 
 [main]
-capslock = control
-meta = control
-leftmeta = control
-rightmeta = control
+capslock = leftcontrol
+meta = leftcontrol
+leftmeta = leftcontrol
+rightmeta = rightcontrol
 EOF
         log_success "Reset to fallback configuration"
     fi

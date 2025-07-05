@@ -30,6 +30,7 @@ else
 capslock = leftcontrol
 
 # Remap Meta (Super/Cmd) keys to Control
+meta = leftcontrol
 leftmeta = leftcontrol
 rightmeta = rightcontrol
 
