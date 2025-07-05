@@ -16,7 +16,7 @@ mkdir -p ~/.local/share/fonts
 if ! fc-list | grep -qi "CaskaydiaMono Nerd Font"; then
   log_info "Installing CaskaydiaMono Nerd Font"
   
-  local temp_dir="/tmp/cascadia-$$"
+  temp_dir="/tmp/cascadia-$$"
   mkdir -p "$temp_dir"
   cd "$temp_dir"
   
@@ -48,7 +48,7 @@ fi
 if ! fc-list | grep -qi "iA Writer Mono S"; then
   log_info "Installing iA Writer Mono S font"
   
-  local temp_dir="/tmp/iafonts-$$"
+  temp_dir="/tmp/iafonts-$$"
   mkdir -p "$temp_dir"
   cd "$temp_dir"
   

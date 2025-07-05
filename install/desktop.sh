@@ -26,7 +26,7 @@ else
   install_packages chromium
   
   # Update browser config to use chromium if Chrome failed
-  local hyprland_conf="$HOME/.config/hypr/hyprland.conf"
+  hyprland_conf="$HOME/.config/hypr/hyprland.conf"
   if [[ -f "$hyprland_conf" ]]; then
     backup_file "$hyprland_conf"
     sed -i 's/google-chrome-stable/chromium/g' "$hyprland_conf"

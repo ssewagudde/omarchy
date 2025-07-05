@@ -10,7 +10,7 @@ sudo pacman -S --needed --noconfirm base-devel
 if ! command -v yay &>/dev/null; then
   log_info "Installing yay AUR helper"
   
-  local temp_dir="/tmp/yay-bin-$$"
+  temp_dir="/tmp/yay-bin-$$"
   git clone https://aur.archlinux.org/yay-bin.git "$temp_dir"
   cd "$temp_dir"
   

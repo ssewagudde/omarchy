@@ -9,7 +9,7 @@ if ! command -v asdcontrol &>/dev/null; then
   log_info "Installing asdcontrol for Apple Display brightness control"
   
   # Clone and build asdcontrol
-  local temp_dir="/tmp/asdcontrol-$$"
+  temp_dir="/tmp/asdcontrol-$$"
   git clone https://github.com/nikosdion/asdcontrol.git "$temp_dir"
   cd "$temp_dir"
   
