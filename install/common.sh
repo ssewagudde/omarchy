@@ -26,6 +26,14 @@ verify_command() {
     command -v "$1" &>/dev/null || { log_error "Command '$1' not found"; return 1; }
 }
 
+verify_file() {
+    [[ -f "$1" ]] || { log_error "File '$1' not found"; return 1; }
+}
+
+verify_directory() {
+    [[ -d "$1" ]] || { log_error "Directory '$1' not found"; return 1; }
+}
+
 # Simple package installation
 install_packages() {
     log_info "Installing: $*"
