@@ -51,7 +51,13 @@ safe_download() {
 # Simple backup function
 backup_file() {
     local file="$1"
-    [[ -f "$file" ]] && cp "$file" "$file.backup.$(date +%s)"
+    if [[ -f "$file" ]]; then
+        cp "$file" "$file.backup.$(date +%s)"
+        log_info "Backed up file: $file"
+    elif [[ -d "$file" ]]; then
+        cp -R "$file" "$file.backup.$(date +%s)"
+        log_info "Backed up directory: $file"
+    fi
 }
 
 # Basic initialization
