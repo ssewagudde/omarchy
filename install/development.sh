@@ -21,7 +21,7 @@ install_packages \
 # Optional extra applications (previously in xtras.sh)
 log_info "Installing optional applications"
 install_packages \
-  signal-desktop spotify dropbox-cli zoom \
+  spotify dropbox-cli zoom \
   obsidian typora libreoffice obs-studio kdenlive \
   pinta xournalpp
 
