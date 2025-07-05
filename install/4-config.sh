@@ -4,16 +4,26 @@
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 init_omarchy_script
 
+# Add error trap for debugging
+trap 'log_error "Script failed at line $LINENO with command: $BASH_COMMAND"' ERR
+
+# Debug: Check if variables are set
+log_info "Debug: OMARCHY_USER_NAME='${OMARCHY_USER_NAME:-NOT_SET}'"
+log_info "Debug: OMARCHY_USER_EMAIL='${OMARCHY_USER_EMAIL:-NOT_SET}'"
+
 # Verify required directories and files exist
+log_info "Checking required directories and files..."
 if [[ ! -d ~/.local/share/omarchy/config ]]; then
     log_error "Omarchy config directory not found. Please ensure Omarchy is properly installed."
     exit 1
 fi
+log_info "✓ Config directory found"
 
 if [[ ! -f ~/.local/share/omarchy/default/zsh/rc ]]; then
     log_error "Omarchy zsh rc file not found. Please ensure Omarchy is properly installed."
     exit 1
 fi
+log_info "✓ Zsh rc file found"
 
 log_info "Copying Omarchy configurations"
 

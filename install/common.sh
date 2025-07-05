@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Common functions for Omarchy installation scripts
-set -euo pipefail
+set -eo pipefail
 
 # Prevent multiple sourcing
 if [[ "${OMARCHY_COMMON_LOADED:-}" == "true" ]]; then
