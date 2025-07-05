@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Omarchy Auto-login Configuration
+set -euo pipefail
+
+# Source common functions if available
+if [[ -f ~/.local/share/omarchy/install/common.sh ]]; then
+    source ~/.local/share/omarchy/install/common.sh
+else
+    log_info() { echo "[INFO] $*" >&2; }
+    log_success() { echo "[SUCCESS] $*" >&2; }
+    log_warning() { echo "[WARNING] $*" >&2; }
+    log_error() { echo "[ERROR] $*" >&2; }
+fi
+
+show_usage() {
+    cat << EOF
+Usage: $(basename "$0") [COMMAND]
+
+Configure automatic login for Hyprland
+
+COMMANDS:
+    enable      Enable auto-login for current user
+    disable     Disable auto-login
+    status      Show current auto-login status
+    help        Show this help message
+
+EXAMPLES:
+    $(basename "$0") enable
+    $(basename "$0") disable
+    $(basename "$0") status
+
+EOF
+}
+
+check_sddm() {
+    if ! systemctl is-enabled sddm &>/dev/null; then
+        log_error "SDDM is not enabled. Run: sudo systemctl enable sddm"
+        exit 1
+    fi
+}
+
+enable_autologin() {
+    check_sddm
+    
+    local username="$USER"
+    log_info "Enabling auto-login for user: $username"
+    
+    # Create SDDM config directory
+    sudo mkdir -p /etc/sddm.conf.d
+    
+    # Create auto-login configuration
+    sudo tee /etc/sddm.conf.d/autologin.conf >/dev/null <<EOF
+[Autologin]
+User=$username
+Session=hyprland
+EOF
+    
+    log_success "Auto-login enabled for $username"
+    log_info "Hyprland will start automatically on next boot"
+}
+
+disable_autologin() {
+    log_info "Disabling auto-login"
+    
+    if [[ -f /etc/sddm.conf.d/autologin.conf ]]; then
+        sudo rm /etc/sddm.conf.d/autologin.conf
+        log_success "Auto-login disabled"
+    else
+        log_info "Auto-login was not enabled"
+    fi
+}
+
+show_status() {
+    log_info "Auto-login status:"
+    
+    if [[ -f /etc/sddm.conf.d/autologin.conf ]]; then
+        echo "Status: ENABLED"
+        echo "Configuration:"
+        cat /etc/sddm.conf.d/autologin.conf
+    else
+        echo "Status: DISABLED"
+    fi
+    
+    echo
+    log_info "SDDM service status:"
+    systemctl is-enabled sddm && echo "SDDM: enabled" || echo "SDDM: disabled"
+}
+
+main() {
+    case "${1:-help}" in
+        enable)
+            enable_autologin
+            ;;
+        disable)
+            disable_autologin
+            ;;
+        status)
+            show_status
+            ;;
+        help|--help|-h)
+            show_usage
+            ;;
+        *)
+            log_error "Unknown command: $1"
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

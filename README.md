@@ -85,7 +85,21 @@ Omarchy is specially optimized for MacBook users:
 
 ## 📖 Usage
 
-After installation:
+### First Boot
+After installation and reboot:
+1. **SDDM login screen** will appear automatically
+2. Select **"Hyprland"** from the session menu (bottom-left)
+3. Enter your password to log in
+
+### Optional Auto-login
+Skip the login screen entirely:
+```bash
+omarchy-autologin enable   # Enable auto-login
+omarchy-autologin disable  # Disable auto-login
+omarchy-autologin status   # Check status
+```
+
+### Keyboard Shortcuts
 - **Super + Enter**: Open terminal
 - **Super + Space**: Application launcher
 - **Super + Q**: Quit application (Mac-style)
