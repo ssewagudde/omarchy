@@ -35,7 +35,7 @@ source ~/.local/share/omarchy/install/development.sh  # Development tools
 source ~/.local/share/omarchy/install/networking.sh   # Syncthing + Tailscale (included by default)
 source ~/.local/share/omarchy/install/docker.sh       # Docker support
 source ~/.local/share/omarchy/install/nvidia.sh       # NVIDIA drivers
-source ~/.local/share/omarchy/install/keyd.sh         # Key remapping (Meta/Caps→Ctrl)
+source ~/.local/share/omarchy/install/nvim.sh         # Neovim (preserves existing config)
 source ~/.local/share/omarchy/install/nvim.sh         # Neovim (preserves existing config)
 ```
 
@@ -143,12 +143,9 @@ Both services start automatically and provide secure, private alternatives to cl
 
 ## ⌨️ Key Remapping
 
-Omarchy includes keyd configuration for Mac-like key behavior:
+Omarchy includes keyd configuration for Mac-like key behavior (installed by default):
 
 ```bash
-# Install and configure key remapping
-source ~/.local/share/omarchy/install/keyd.sh
-
 # Manage keyd configuration
 omarchy-keyd status    # Show current status
 omarchy-keyd reload    # Reload configuration
@@ -156,7 +153,7 @@ omarchy-keyd edit      # Edit configuration
 omarchy-keyd test      # Test key mappings
 ```
 
-**Default mappings:**
+**Default mappings (automatically configured):**
 - **Caps Lock → Control**
 - **Meta/Super/Cmd → Control**
 - This makes Cmd+C, Cmd+V, etc. work like on Mac

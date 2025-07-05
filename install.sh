@@ -7,7 +7,7 @@ init_omarchy_script
 log_info "Starting Omarchy installation"
 
 # Install core components (fast)
-for f in ~/.local/share/omarchy/install/{1-yay,2-identification,3-terminal,4-config,hyprlandia,desktop,fonts,backgrounds,theme,mimetypes,networking,development}.sh; do 
+for f in ~/.local/share/omarchy/install/{1-yay,2-identification,3-terminal,4-config,hyprlandia,desktop,fonts,backgrounds,theme,mimetypes,keyd,networking,development}.sh; do 
   if [[ -f "$f" ]]; then
     log_info "Running $(basename "$f")"
     source "$f"
