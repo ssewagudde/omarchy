@@ -5,8 +5,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 init_omarchy_script
 
 # Verify required directories and files exist
-verify_directory ~/.local/share/omarchy/config
-verify_file ~/.local/share/omarchy/default/zsh/rc
+if [[ ! -d ~/.local/share/omarchy/config ]]; then
+    log_error "Omarchy config directory not found. Please ensure Omarchy is properly installed."
+    exit 1
+fi
+
+if [[ ! -f ~/.local/share/omarchy/default/zsh/rc ]]; then
+    log_error "Omarchy zsh rc file not found. Please ensure Omarchy is properly installed."
+    exit 1
+fi
 
 log_info "Copying Omarchy configurations"
 
@@ -17,11 +24,21 @@ fi
 
 # Copy over Omarchy configs (excluding nvim to preserve user config)
 log_info "Copying configuration files (preserving existing nvim config)"
+
+# Ensure ~/.config exists
+mkdir -p ~/.config
+
+# Copy each config directory
 for config_dir in ~/.local/share/omarchy/config/*/; do
-    dir_name=$(basename "$config_dir")
-    if [[ "$dir_name" != "nvim" ]]; then
-        cp -R "$config_dir" ~/.config/
-        log_info "Copied $dir_name configuration"
+    if [[ -d "$config_dir" ]]; then
+        dir_name=$(basename "$config_dir")
+        if [[ "$dir_name" != "nvim" ]]; then
+            log_info "Copying $dir_name configuration..."
+            cp -R "$config_dir" ~/.config/
+            log_info "✓ Copied $dir_name configuration"
+        else
+            log_info "⏭ Skipped nvim configuration (preserving existing)"
+        fi
     fi
 done
 
@@ -30,6 +47,8 @@ log_info "Setting zsh as default shell"
 
 # Wait a moment for package installation to complete if needed
 sleep 2
+
+log_info "Checking for zsh installation..."
 
 # First, verify zsh is installed and find its location
 ZSH_PATH=""
@@ -106,19 +125,24 @@ git config --global pull.rebase true
 git config --global init.defaultBranch master
 
 # Set identification from install inputs
-if [[ -n "${OMARCHY_USER_NAME//[[:space:]]/}" ]]; then
+if [[ -n "${OMARCHY_USER_NAME:-}" ]] && [[ -n "${OMARCHY_USER_NAME//[[:space:]]/}" ]]; then
   git config --global user.name "$OMARCHY_USER_NAME"
+  log_info "Set git user.name to: $OMARCHY_USER_NAME"
 fi
 
-if [[ -n "${OMARCHY_USER_EMAIL//[[:space:]]/}" ]]; then
+if [[ -n "${OMARCHY_USER_EMAIL:-}" ]] && [[ -n "${OMARCHY_USER_EMAIL//[[:space:]]/}" ]]; then
   git config --global user.email "$OMARCHY_USER_EMAIL"
+  log_info "Set git user.email to: $OMARCHY_USER_EMAIL"
 fi
 
 # Set default XCompose that is triggered with CapsLock
+log_info "Setting up XCompose configuration"
 tee ~/.XCompose >/dev/null <<EOF
 include "%H/.local/share/omarchy/default/xcompose"
 
 # Identification
-<Multi_key> <space> <n> : "$OMARCHY_USER_NAME"
-<Multi_key> <space> <e> : "$OMARCHY_USER_EMAIL"
+<Multi_key> <space> <n> : "${OMARCHY_USER_NAME:-}"
+<Multi_key> <space> <e> : "${OMARCHY_USER_EMAIL:-}"
 EOF
+
+log_success "Configuration setup completed"
