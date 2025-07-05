@@ -36,7 +36,7 @@ source ~/.local/share/omarchy/install/networking.sh   # Syncthing + Tailscale (i
 source ~/.local/share/omarchy/install/docker.sh       # Docker support
 source ~/.local/share/omarchy/install/nvidia.sh       # NVIDIA drivers
 source ~/.local/share/omarchy/install/keyd.sh         # Key remapping (Meta/Caps→Ctrl)
-source ~/.local/share/omarchy/install/xtras.sh        # Extra applications
+source ~/.local/share/omarchy/install/nvim.sh         # Neovim (preserves existing config)
 ```
 
 ## 🍎 MacBook Features
@@ -160,6 +160,27 @@ omarchy-keyd test      # Test key mappings
 - **Caps Lock → Control**
 - **Meta/Super/Cmd → Control**
 - This makes Cmd+C, Cmd+V, etc. work like on Mac
+
+## 📝 Neovim Configuration
+
+Omarchy respects your existing Neovim configuration and provides tools to manage it:
+
+```bash
+# Install Neovim (preserves existing config)
+source ~/.local/share/omarchy/install/nvim.sh
+
+# Manage your nvim configuration
+omarchy-nvim status           # Show current config status
+omarchy-nvim backup           # Backup current config
+omarchy-nvim link ~/my-config # Symlink to your config
+omarchy-nvim reset            # Remove config for fresh start
+```
+
+**Features:**
+- **Preserves existing configs** - Never overwrites your setup
+- **Symlink support** - Detects and preserves symlinked configurations
+- **Easy management** - Backup, restore, and link configurations
+- **Fresh start option** - Clean slate for new configurations
 
 ## 🔄 Backup & Rollback
 

@@ -1,0 +1,208 @@
+#!/bin/bash
+
+# Omarchy Neovim Configuration Manager
+set -euo pipefail
+
+# Source common functions if available
+if [[ -f ~/.local/share/omarchy/install/common.sh ]]; then
+    source ~/.local/share/omarchy/install/common.sh
+else
+    log_info() { echo "[INFO] $*" >&2; }
+    log_success() { echo "[SUCCESS] $*" >&2; }
+    log_warning() { echo "[WARNING] $*" >&2; }
+    log_error() { echo "[ERROR] $*" >&2; }
+fi
+
+show_usage() {
+    cat << EOF
+Usage: $(basename "$0") [COMMAND]
+
+Omarchy Neovim configuration manager
+
+COMMANDS:
+    status      Show current nvim configuration status
+    backup      Backup current nvim configuration
+    restore     Restore nvim configuration from backup
+    reset       Remove current nvim config (for fresh start)
+    link        Create symlink to custom nvim config
+    help        Show this help message
+
+EXAMPLES:
+    $(basename "$0") status
+    $(basename "$0") backup
+    $(basename "$0") link ~/my-nvim-config
+    $(basename "$0") reset
+
+EOF
+}
+
+show_status() {
+    log_info "Neovim configuration status:"
+    echo
+    
+    if [[ -L ~/.config/nvim ]]; then
+        echo "Type: SYMLINK"
+        echo "Target: $(readlink ~/.config/nvim)"
+        echo "Status: $([ -d "$(readlink ~/.config/nvim)" ] && echo "✅ Valid" || echo "❌ Broken")"
+    elif [[ -d ~/.config/nvim ]]; then
+        echo "Type: DIRECTORY"
+        echo "Location: ~/.config/nvim"
+        echo "Files: $(find ~/.config/nvim -type f | wc -l) files"
+        if [[ -f ~/.config/nvim/init.lua ]]; then
+            echo "Config: init.lua found"
+        elif [[ -f ~/.config/nvim/init.vim ]]; then
+            echo "Config: init.vim found"
+        else
+            echo "Config: No init file found"
+        fi
+    else
+        echo "Type: NONE"
+        echo "Status: No nvim configuration found"
+    fi
+    
+    echo
+    if command -v nvim &>/dev/null; then
+        echo "Neovim: $(nvim --version | head -1)"
+    else
+        echo "Neovim: Not installed"
+    fi
+}
+
+backup_config() {
+    if [[ ! -d ~/.config/nvim ]] && [[ ! -L ~/.config/nvim ]]; then
+        log_error "No nvim configuration to backup"
+        return 1
+    fi
+    
+    local backup_path="$HOME/.config/nvim.backup.$(date +%s)"
+    
+    if [[ -L ~/.config/nvim ]]; then
+        log_info "Backing up symlink target"
+        cp -R "$(readlink ~/.config/nvim)" "$backup_path"
+    else
+        log_info "Backing up nvim configuration"
+        cp -R ~/.config/nvim "$backup_path"
+    fi
+    
+    log_success "Backup created: $backup_path"
+}
+
+restore_config() {
+    local backup_files=(~/.config/nvim.backup.*)
+    
+    if [[ ! -e "${backup_files[0]}" ]]; then
+        log_error "No backup files found"
+        return 1
+    fi
+    
+    log_info "Available backups:"
+    for backup in "${backup_files[@]}"; do
+        if [[ -d "$backup" ]]; then
+            echo "  $(basename "$backup") ($(date -r "$backup" '+%Y-%m-%d %H:%M'))"
+        fi
+    done
+    
+    echo
+    read -p "Enter backup name to restore (or 'latest' for most recent): " backup_choice
+    
+    if [[ "$backup_choice" == "latest" ]]; then
+        backup_choice=$(basename "$(ls -t ~/.config/nvim.backup.* | head -1)")
+    fi
+    
+    local backup_path="$HOME/.config/$backup_choice"
+    
+    if [[ ! -d "$backup_path" ]]; then
+        log_error "Backup not found: $backup_path"
+        return 1
+    fi
+    
+    # Remove current config
+    if [[ -d ~/.config/nvim ]] || [[ -L ~/.config/nvim ]]; then
+        rm -rf ~/.config/nvim
+    fi
+    
+    # Restore backup
+    cp -R "$backup_path" ~/.config/nvim
+    log_success "Restored nvim configuration from $backup_choice"
+}
+
+reset_config() {
+    if [[ ! -d ~/.config/nvim ]] && [[ ! -L ~/.config/nvim ]]; then
+        log_info "No nvim configuration to reset"
+        return 0
+    fi
+    
+    log_warning "This will remove your current nvim configuration"
+    read -p "Continue? (y/N): " -n 1 -r
+    echo
+    
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # Create backup first
+        backup_config
+        
+        # Remove current config
+        rm -rf ~/.config/nvim
+        log_success "Nvim configuration reset"
+        log_info "You can now install a fresh configuration"
+    else
+        log_info "Reset cancelled"
+    fi
+}
+
+link_config() {
+    local target_path="$1"
+    
+    if [[ -z "$target_path" ]]; then
+        log_error "Please specify the path to your nvim configuration"
+        log_info "Example: $(basename "$0") link ~/my-nvim-config"
+        return 1
+    fi
+    
+    # Expand tilde
+    target_path="${target_path/#\~/$HOME}"
+    
+    if [[ ! -d "$target_path" ]]; then
+        log_error "Directory not found: $target_path"
+        return 1
+    fi
+    
+    # Backup existing config if it exists
+    if [[ -d ~/.config/nvim ]] || [[ -L ~/.config/nvim ]]; then
+        backup_config
+        rm -rf ~/.config/nvim
+    fi
+    
+    # Create symlink
+    ln -s "$target_path" ~/.config/nvim
+    log_success "Created symlink: ~/.config/nvim -> $target_path"
+}
+
+main() {
+    case "${1:-help}" in
+        status)
+            show_status
+            ;;
+        backup)
+            backup_config
+            ;;
+        restore)
+            restore_config
+            ;;
+        reset)
+            reset_config
+            ;;
+        link)
+            link_config "${2:-}"
+            ;;
+        help|--help|-h)
+            show_usage
+            ;;
+        *)
+            log_error "Unknown command: ${1:-}"
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

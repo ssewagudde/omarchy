@@ -15,8 +15,15 @@ if [[ -d ~/.config ]]; then
     backup_file ~/.config
 fi
 
-# Copy over Omarchy configs
-cp -R ~/.local/share/omarchy/config/* ~/.config/
+# Copy over Omarchy configs (excluding nvim to preserve user config)
+log_info "Copying configuration files (preserving existing nvim config)"
+for config_dir in ~/.local/share/omarchy/config/*/; do
+    dir_name=$(basename "$config_dir")
+    if [[ "$dir_name" != "nvim" ]]; then
+        cp -R "$config_dir" ~/.config/
+        log_info "Copied $dir_name configuration"
+    fi
+done
 
 # Change default shell to zsh
 log_info "Setting zsh as default shell"

@@ -4,35 +4,22 @@
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 init_omarchy_script
 
-if ! command -v nvim &>/dev/null; then
-  log_info "Installing Neovim and related tools"
-  install_packages nvim luarocks tree-sitter-cli
+log_info "Installing Neovim and related tools"
+install_packages nvim luarocks tree-sitter-cli
 
-  # Backup existing nvim config if it exists
-  if [[ -d ~/.config/nvim ]]; then
-    backup_file ~/.config/nvim
-    log_info "Backed up existing nvim configuration"
+# Check for existing nvim configuration
+if [[ -d ~/.config/nvim ]] || [[ -L ~/.config/nvim ]]; then
+  log_success "Existing Neovim configuration detected - preserving it"
+  if [[ -L ~/.config/nvim ]]; then
+    log_info "Neovim config is symlinked to: $(readlink ~/.config/nvim)"
   fi
-
-  # Install Omarchy nvim configuration
-  log_info "Installing Omarchy nvim configuration"
-  
-  # Check if nvim config was already copied by 4-config.sh
-  if [[ -d ~/.config/nvim ]] && [[ -f ~/.config/nvim/init.lua ]]; then
-    log_info "Neovim configuration already exists (copied by config script)"
-  else
-    # Remove any incomplete config and install fresh
-    rm -rf ~/.config/nvim
-    
-    # Verify source config exists
-    if [[ -d ~/.local/share/omarchy/config/nvim ]]; then
-      cp -R ~/.local/share/omarchy/config/nvim ~/.config/nvim
-      log_success "Neovim configuration installed"
-    else
-      log_error "Omarchy nvim config not found at ~/.local/share/omarchy/config/nvim"
-      exit 1
-    fi
-  fi
+  log_info "Your nvim configuration will remain unchanged"
 else
-  log_info "Neovim already installed"
+  log_info "No existing nvim config found"
+  log_info "You can set up your own nvim configuration or use a popular one like:"
+  log_info "  • LazyVim: https://github.com/LazyVim/LazyVim"
+  log_info "  • NvChad: https://github.com/NvChad/NvChad"
+  log_info "  • AstroNvim: https://github.com/AstroNvim/AstroNvim"
 fi
+
+log_success "Neovim installation completed"
