@@ -20,6 +20,7 @@ done
 log_info "Installing optional components"
 source ~/.local/share/omarchy/install/bluetooth.sh
 source ~/.local/share/omarchy/install/nvim.sh
+source ~/.local/share/omarchy/install/networking.sh
 # source ~/.local/share/omarchy/install/docker.sh      # Uncomment if needed
 # source ~/.local/share/omarchy/install/ruby.sh        # Uncomment if needed  
 # source ~/.local/share/omarchy/install/printer.sh     # Uncomment if needed

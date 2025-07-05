@@ -32,6 +32,7 @@ The fast install includes only essentials. Add optional components later as need
 ```bash
 # Install specific components after core installation
 source ~/.local/share/omarchy/install/development.sh  # Development tools
+source ~/.local/share/omarchy/install/networking.sh   # Syncthing + Tailscale (included by default)
 source ~/.local/share/omarchy/install/docker.sh       # Docker support
 source ~/.local/share/omarchy/install/nvidia.sh       # NVIDIA drivers
 source ~/.local/share/omarchy/install/keyd.sh         # Key remapping (Meta/Caps→Ctrl)
@@ -68,6 +69,7 @@ Omarchy is specially optimized for MacBook users:
 - **Navigation**: zoxide for smart directory jumping
 - **History**: atuin for enhanced shell history sync
 - **Monitoring**: btop for system monitoring
+- **Networking**: syncthing for file sync, tailscale for secure networking
 
 ### Desktop Environment
 - **Hyprland** Wayland compositor
@@ -100,6 +102,30 @@ source ~/.local/share/omarchy/install/remote-access.sh
 ```
 
 Then download RustDesk on your Mac/Windows/phone and connect using the displayed ID!
+
+## 🌐 File Sync & Secure Networking
+
+Omarchy includes modern networking tools for seamless connectivity:
+
+### **Syncthing - Decentralized File Sync**
+```bash
+# Access web interface (auto-starts after installation)
+http://localhost:8384
+
+# Add devices and sync folders across all your machines
+# No cloud required - direct peer-to-peer synchronization
+```
+
+### **Tailscale - Zero-Config VPN**
+```bash
+# Connect your device to your Tailscale network
+sudo tailscale up
+
+# Access all your devices securely from anywhere
+# Works behind NAT/firewalls without port forwarding
+```
+
+Both services start automatically and provide secure, private alternatives to cloud services.
 
 ## ⌨️ Key Remapping
 
