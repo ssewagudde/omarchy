@@ -33,6 +33,8 @@ capslock = leftcontrol
 meta = leftcontrol
 leftmeta = leftcontrol
 rightmeta = rightcontrol
+leftcontrol = leftcmd
+rightcontrol = rightcmd
 
 EOF
   log_info "Created fallback keyd configuration"
