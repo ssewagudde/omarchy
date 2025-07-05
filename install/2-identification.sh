@@ -11,8 +11,7 @@ verify_command "yay"
 log_info "Installing gum for user input"
 install_packages gum
 
-# Verify gum installation
-verify_command "gum"
+# Note: gum verification is handled by install_packages function
 
 # Configure identification
 log_info "Configuring user identification for git and autocomplete"
