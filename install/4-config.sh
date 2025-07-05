@@ -20,12 +20,47 @@ cp -R ~/.local/share/omarchy/config/* ~/.config/
 
 # Change default shell to zsh
 log_info "Setting zsh as default shell"
-if [[ ! -f /usr/bin/zsh ]]; then
-    log_error "zsh not found at /usr/bin/zsh"
-    exit 1
+
+# Wait a moment for package installation to complete if needed
+sleep 2
+
+# First, verify zsh is installed and find its location
+ZSH_PATH=""
+if [[ -f /usr/bin/zsh ]]; then
+    ZSH_PATH="/usr/bin/zsh"
+elif [[ -f /bin/zsh ]]; then
+    ZSH_PATH="/bin/zsh"
+elif command -v zsh &>/dev/null; then
+    ZSH_PATH=$(command -v zsh)
+else
+    log_warning "zsh not found. It may still be installing..."
+    log_info "Skipping shell change for now. You can run 'chsh -s /usr/bin/zsh' later."
+    ZSH_PATH=""
 fi
 
-chsh -s /usr/bin/zsh
+if [[ -n "$ZSH_PATH" ]]; then
+
+    log_info "Found zsh at: $ZSH_PATH"
+
+    # Verify zsh is in /etc/shells
+    if ! grep -q "^$ZSH_PATH$" /etc/shells; then
+        log_info "Adding $ZSH_PATH to /etc/shells"
+        echo "$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null
+    fi
+
+    # Change shell with better error handling (disable strict error checking temporarily)
+    set +e
+    if chsh -s "$ZSH_PATH" 2>/dev/null; then
+        log_success "Default shell changed to zsh"
+    else
+        log_warning "Failed to change default shell automatically"
+        log_info "You can manually change your shell later with: chsh -s $ZSH_PATH"
+        log_info "Or add this to your ~/.bashrc: exec $ZSH_PATH"
+    fi
+    set -e
+else
+    log_info "Skipping shell change - zsh not available yet"
+fi
 
 # Backup existing zshrc
 backup_file ~/.zshrc
