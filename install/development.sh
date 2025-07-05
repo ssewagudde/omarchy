@@ -21,8 +21,7 @@ install_packages \
 # Optional extra applications (previously in xtras.sh)
 log_info "Installing optional applications"
 install_packages \
-  spotify dropbox-cli zoom \
-  obsidian typora libreoffice obs-studio kdenlive \
+  obsidian typora libreoffice \
   pinta xournalpp
 
 # Copy over Omarchy applications
