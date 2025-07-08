@@ -35,7 +35,7 @@ source ~/.local/share/omarchy/install/development.sh  # Development tools
 source ~/.local/share/omarchy/install/networking.sh   # Syncthing + Tailscale (included by default)
 source ~/.local/share/omarchy/install/docker.sh       # Docker support
 source ~/.local/share/omarchy/install/nvidia.sh       # NVIDIA drivers
-source ~/.local/share/omarchy/install/nvim.sh         # Neovim (preserves existing config)
+source ~/.local/share/omarchy/install/thunderbolt.sh  # Thunderbolt Ethernet support (MacBook Pro)
 source ~/.local/share/omarchy/install/nvim.sh         # Neovim (preserves existing config)
 ```
 
@@ -46,6 +46,7 @@ Omarchy is specially optimized for MacBook users:
 - **Natural trackpad scrolling** and 3-finger workspace gestures
 - **Mac-style shortcuts**: Cmd+C/V/X/A/Z/Q/W/N/R work as expected
 - **Caps Lock → Control** and **Meta/Cmd → Control** mapping for familiar keyboard behavior
+- **Thunderbolt Ethernet support** for MacBook Pro with comprehensive driver installation
 - **Optimal 1.33x scaling** for crisp text on high-DPI displays
 - **Platform detection** for seamless macOS/Linux compatibility
 
